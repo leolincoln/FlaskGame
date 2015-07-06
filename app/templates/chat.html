@@ -1,0 +1,24 @@
+{% extends "template.html" %}
+{% block title %}
+<title> Game - chat page</title>
+{% endblock %}
+{% block js %}
+<script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/socket.io/0.9.16/socket.io.min.js"></script>
+<script src="/static/js/papaparse.min.js"></script>
+<script type="text/javascript" src="/static/js/chat.js"></script>
+
+
+{% endblock %}
+
+{% block content %}
+<h2>Receive:</h2>
+<div id="log"></div>
+<form name="message" id="broadcast" action="#" method='POST'>
+    <input name="usermsg" type="text" id="usermsg" size="63" />
+    <input name="submitmsg" type="submit" id="submitmsg" value="Send" />
+</form>
+{% endblock %}
+
+
+
+
