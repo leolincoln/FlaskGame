@@ -24,7 +24,7 @@ def login_required(f):
 
 @app.route('/')
 def home():
-    return "hello, World!"
+    return render_template('login.html')
 
 @app.route('/welcome')
 def welcome():
@@ -83,7 +83,10 @@ def test_connect():
 @socketio.on('usr_message')
 def handle_my_event(msg):
     from app import db,models
-    tempM = models.Message(session['username'],msg['data'],session['role'])
+    try:
+        tempM = models.Message(session['username'],msg['data'],session['role'])
+    except KeyError:
+        return redirect(url_for('login'))
     db.session.add(tempM)
     db.session.commit()
 
