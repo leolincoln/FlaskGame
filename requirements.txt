@@ -23,8 +23,8 @@ ipython==3.1.0
 itsdangerous==0.24
 Jinja2==2.7.3
 MarkupSafe==0.23
+numpy
 matplotlib==1.4.3
-mayavi==4.4.2
 mercurial==3.4.2
 MicrosoftNgram==1.3
 mock==1.0.1
