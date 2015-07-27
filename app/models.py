@@ -2,11 +2,11 @@ from app import db
 from datetime import datetime
 class Message(db.Model):
     id = db.Column(db.Integer, primary_key=True)
-    username = db.Column(db.String(80))
+    fromRole = db.Column(db.String(80))
     message = db.Column(db.String(200))
-    role = db.Column(db.String(10))
+    toRole = db.Column(db.String(10))
     time = db.Column(db.DateTime)
-    def __init__(self,username,message,role,time=None):
+    def __init__(self,fromRole,message,toRole,time=None):
         if time is None:
             time=datetime.utcnow()
         self.username = username
@@ -39,13 +39,13 @@ class Bank(db.Model):
 class Trans(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     time = db.Column(db.DateTime)
-    fromUser = db.Column(db.String(80))
-    toUser = db.Column(db.String(80))
+    fromRole = db.Column(db.String(80))
+    toRole = db.Column(db.String(80))
     amount = db.Column(db.Float)
-    def __init__(self,time,fromUser,toUser,amount):
+    def __init__(self,time,fromRole,toRole,amount):
         this.time = time
-        this.fromUser = fromUser
-        this.toUser = toUser
+        this.fromRole = fromRole
+        this.toRole = toRole
         this.amount = amount
     def __repr__(self):
         return '<$%r from %r to %r >'%(this.amount,this.fromUser,this.toUser)
