@@ -80,18 +80,32 @@ def test_connect():
     emit('new_message', {'data': 'Connected', 'count': 0})
     print 'connected'
 
+
+#There are only 4 types of messages 
+#tester1 -> judge      t1
+#tester2 -> judge      t2
+#judge -> tester1      j1
+#judge -> tester2      j2
+
+@socketio.on('connect_message')
+def connected(msg):
+    emit('connect_message',{'data':msg['data'],'role':session['role'],'time':str(datetime.now())[10:19]})
+
 @socketio.on('usr_message')
 def handle_my_event(msg):
     from app import db,models
     try:
-        tempM = models.Message(session['username'],msg['data'],session['role'])
+        if session['role']!='judge':
+            tempM = models.Message(session['role'],msg['data'],'judge')
+        else:
+            tempM = models.Message(session['role'],msg['data'],msg['toUser'])
     except KeyError:
         return redirect(url_for('login'))
     db.session.add(tempM)
     db.session.commit()
 
     session['receive_count'] = session.get('receive_count', 0) + 1
-    emit('new_message',{'data':msg['data'],'count':session['receive_count'],'role':session['role'],'time':str(datetime.now())[10:19]},callback=ack,broadcast=True)
+    emit('new_message',{'data':msg['data'],'count':session['receive_count'],'role':session['role'],'time':str(datetime.now())[10:19],'toUser':msg['toUser']},callback=ack,broadcast=True)
 
 
 if __name__=='__main__':

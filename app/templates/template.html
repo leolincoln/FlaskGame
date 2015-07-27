@@ -57,7 +57,7 @@
                 </form>
                 <ul class="nav navbar-nav navbar-right">
                     {% if session.logged_in %}
-                    <li><p class="navbar-text">Welcome, {{session.username}} as {{session.role}}</p></li>
+                    <li><p class="navbar-text" id="welcomemessage">Welcome, {{session.username}} as {{session.role}}</p></li>
                     <li><a href='/logout'>logout</a></li>
                     {% else %}
                     <li><p class="navbar-text">Already have an account?</p></li>

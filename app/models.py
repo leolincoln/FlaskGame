@@ -9,12 +9,12 @@ class Message(db.Model):
     def __init__(self,fromRole,message,toRole,time=None):
         if time is None:
             time=datetime.utcnow()
-        self.username = username
+        self.fromRole = fromRole
         self.message = message
-        self.role = role
+        self.toRole = toRole
         self.time = time
     def __repr__(self):
-        return '<Message %r>' % self.message
+        return '<Message %r, from %r, to %r>' % (self.message,self.fromRole,self.toRole)
 
 class User(db.Model):
     id = db.Column(db.Integer, primary_key=True)
