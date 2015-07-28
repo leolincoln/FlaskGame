@@ -3,9 +3,10 @@ $(document).ready(function(){
     console.log(currentUser)
     var socket = io.connect('http://' + document.domain + ':' + location.port);
     socket.on('connect', function() {
-        socket.emit('connect_message', {data: 'I\'m connected!'});
+        socket.emit('connect_message', {data: 'I\'m connected!','role': ''+currentUser});
 
     });
+
     socket.on('connect_message',function(msg){
         if($("#log").length != 0){
             $('#log').append('<br>'+ msg.time+' ' + msg.role+' : ' + msg.data);
@@ -48,14 +49,10 @@ $(document).ready(function(){
                 $('#log2').append('<br>'+ msg.time+' ' + msg.role+' : ' + msg.data);
             }
         }
-
-        
         $('input#usermsg').val('')
         if(currentUser=='judge'){
             $('input#usermsg2').val('')
         }
-
-
     });
 
 

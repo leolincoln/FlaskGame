@@ -89,7 +89,8 @@ def test_connect():
 
 @socketio.on('connect_message')
 def connected(msg):
-    emit('connect_message',{'data':msg['data'],'role':session['role'],'time':str(datetime.now())[10:19]})
+    print 'in connnect_message'
+    emit('connect_message',{'data':msg['data'],'role':msg['role'],'time':str(datetime.now())[10:19]})
 
 @socketio.on('usr_message')
 def handle_my_event(msg):
