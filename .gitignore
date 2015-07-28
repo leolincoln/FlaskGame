@@ -1,7 +1,8 @@
 venv
 # CSV data files sometimes they are confidential #
 #############
-*.csv
+#*.csv
+
 *.pyc
 # Compiled source #
 ###################
