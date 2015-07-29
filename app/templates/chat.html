@@ -12,6 +12,20 @@
 
 {% block content %}
 {% if session.role == 'judge' %}
+{% if session.results %}
+<div class="row">
+  <div class="col-lg-9">
+    <div class="panel panel-default">
+      <div class="panel-heading"> results for tester1 and tester2 </div>
+      <div class="panel-body">
+        {% autoescape false %}
+        {{ session.results }}
+        {% endautoescape %}
+      </div>
+    </div>
+  </div>
+  </div>
+  {% endif %}
 	<div class="row ">
 		<div class="col-sm-6" >
 			<div class="panel panel-default">

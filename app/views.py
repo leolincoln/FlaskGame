@@ -4,11 +4,15 @@ from flask.ext.socketio import SocketIO,emit
 from flask.ext.sqlalchemy import SQLAlchemy
 from datetime import datetime
 from app import app, socketio
+import random
 #app = Flask(__name__)
 
 #app.config.from_object('config')
 #db = SQLAlchemy(app)
 #socketio = SocketIO(app)
+
+
+
 
 #login required decorator
 def login_required(f):
@@ -40,6 +44,22 @@ def colors():
 def chat():
     return render_template('chat.html')
 
+    
+def get_rand_no_duplicate(sList,number=10):
+    print '*'*80
+    print 'in get_rand_no_duplicate'
+    print len(sList)
+    resultList = []
+    i=0
+    while i<number:
+        iTemp = random.randrange(0,len(sList))
+        print iTemp
+        if iTemp not in resultList:
+            resultList.append(iTemp)
+            i+=1
+    return [sList[i] for i in resultList]
+
+
 @app.route('/login',methods=['GET','POST'])
 def login():
     
@@ -57,15 +77,18 @@ def login():
             if session['role']!='judge':
                 return redirect(url_for('colors'))
             else:
-                f = open('app/results.csv','r')
-                lines = f.read()
-                print lines
+                with open('app/results.csv','r') as f:
+                    content = f.read()
+                fakeResultList = get_rand_no_duplicate(content.split(',\r'),10)
+                session['results'] = '<br>'.join(fakeResultList)
                 return redirect(url_for('chat'))
+                #return render_template('chat.html',results = '<br>'.join(fakeResultList))
             #return render_template('colors.html',session=session )
     return render_template('login.html',error = error)
 
 @app.route('/logout')
 def logout():
+    #reset money if judge log out. 
     session.pop('logged_in',None)
     session.pop('username',None) 
     session.pop('password',None)
