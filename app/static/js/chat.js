@@ -17,7 +17,7 @@ $(document).ready(function(){
     });
 
     socket.on('new_message', function(msg) {
-        if(msg.role == 'judge' && msg.toUser == 'tester1'){
+        if(msg.role == 'judge' && msg.toRole == 'tester1'){
             if(currentUser=='judge'){
                 $('#log').append('<br>'+ msg.time+' ' + msg.role+' : ' + msg.data);
             }
@@ -25,7 +25,7 @@ $(document).ready(function(){
                 $('#log').append('<br>'+ msg.time+' ' + msg.role+' : ' + msg.data);
             }
         }
-        else if(msg.role == 'judge' && msg.toUser == 'tester2'){
+        else if(msg.role == 'judge' && msg.toRole == 'tester2'){
             if(currentUser=='judge'){
                 $('#log2').append('<br>'+ msg.time+' ' + msg.role+' : ' + msg.data);
             }
@@ -49,30 +49,40 @@ $(document).ready(function(){
                 $('#log2').append('<br>'+ msg.time+' ' + msg.role+' : ' + msg.data);
             }
         }
-        $('input#usermsg').val('')
+        //clean up messages
+        $('input#usermsg2').val('')
         if(currentUser=='judge'){
-            $('input#usermsg2').val('')
+            $('input#usermsg').val('')
         }
     });
 
-
+    if($("$mymodal").length!=0){
+        $('form#mymodal').submit(function(event){
+            socket.emit('money_message',{data: $('#money').val(),toRole: 'tester1'});
+        });
+    };
+    if($("$mymodal2").length!=0){
+        $('form#mymodal2').submit(function(event){
+            socket.emit('money_message',{data: $('#money2').val(),toRole: 'tester2'});
+        });
+    };
 
     if($("#broadcast").length != 0){
         $('form#broadcast').submit(function(event) {
-            socket.emit('usr_message', {data: $('#usermsg').val(),toUser: 'tester1'});
+            socket.emit('usr_message', {data: $('#usermsg').val(),toRole: 'tester1'});
             return false;
         });
     };
     if($("#broadcast2").length != 0){
         $('form#broadcast2').submit(function(event) {
-        socket.emit('usr_message', {data: $('#usermsg2').val(),toUser: 'tester2'});
+        socket.emit('usr_message', {data: $('#usermsg2').val(),toRole: 'tester2'});
         return false;
     });
     };
     if($("#broadcast3").length != 0){
 
         $('form#broadcast3').submit(function(event) {
-        socket.emit('usr_message', {data: $('#usermsg3').val(),toUser: 'judge'});
+        socket.emit('usr_message', {data: $('#usermsg3').val(),toRole: 'judge'});
         return false;
     });
     }

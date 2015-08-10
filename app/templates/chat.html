@@ -9,8 +9,36 @@
 
 
 {% endblock %}
+{% if money %}
+{% block navbar %}
+<li class="active"><a href="#">BANK: ${{money}}</a></li>
+{% endblock %}
+{% endif %}
+
+
 
 {% block content %}
+
+<!-- Modal -->
+<div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+    <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+        <h4 class="modal-title">Money Dialog</h4>
+      </div>
+      <form name="moneymodal1" id="moneymodal1" action="#" method='POST'> 
+      <div class="modal-body">
+        <input type="number" name="money_amount" id="money" placeholder="enter money amount"> </input>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+        <input type="submit" class="btn btn-primary" value="send"></input>
+      </div>
+    </form>
+    </div><!-- /.modal-content -->
+  </div><!-- /.modal-dialog -->
+</div><!-- /.modal -->
 {% if session.role == 'judge' %}
 {% if session.results %}
 <div class="row">
@@ -44,21 +72,22 @@
 	</div>
 
 
-<!-- Modal -->
-<div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
-	  <div class="modal-dialog">
+<div class="modal fade" id="myModal2" tabindex="-1" role="dialog" aria-labelledby="myModal2Label">
+    <div class="modal-dialog">
     <div class="modal-content">
       <div class="modal-header">
         <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-        <h4 class="modal-title">Modal title</h4>
+        <h4 class="modal-title">Money Dialog</h4>
       </div>
+      <form name="moneymodal2" id="moneymodal2" action="#" method='POST'> 
       <div class="modal-body">
-        <p>One fine body&hellip;</p>
+        <input type="number" name="money_amount2" id="money2" placeholder="enter money amount"> </input>
       </div>
       <div class="modal-footer">
         <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-        <button type="button" class="btn btn-primary">Save changes</button>
+        <input type="submit" class="btn btn-primary" value="send"></input>
       </div>
+    </form>
     </div><!-- /.modal-content -->
   </div><!-- /.modal-dialog -->
 </div><!-- /.modal -->
@@ -67,17 +96,9 @@
   <div class="col-sm-6">
   	<form name="message" id="broadcast" action="#" method='POST'>
     <div class="input-group">
-   	<span class="input-group-btn">
-	<button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Action <span class="caret"></span></button>
-	<ul class="dropdown-menu">
-<button type="button" class="btn btn-primary btn-lg" data-toggle="modal" data-target="#myModal">
-  Send Money
-</button>
-
-	</li>
-	</ul>
+<span class="input-group-btn">
+	<button type="button" class="btn btn-default" data-toggle="modal" data-target="#myModal" aria-haspopup="true" aria-expanded="false">$ </button>
 	</span><!-- /btn-group -->
-
       <input type="text" class="form-control" name="usermsg" id="usermsg" placeholder="enter chat">
       <span class="input-group-btn">
         <input class="btn btn-default" name="submitmsg" id="submitmsg" type="submit" value="Enter"></input>
@@ -85,9 +106,14 @@
   </form>
     </div><!-- /input-group -->
   </div><!-- /.col-lg-6 -->
+
+<div class="row">
   <div class="col-sm-6">
-  	<form name="message2" id="broadcast2" action="#" method='POST'>
+    <form name="message2" id="broadcast2" action="#" method='POST'>
     <div class="input-group">
+<span class="input-group-btn">
+  <button type="button" class="btn btn-default" data-toggle="modal" data-target="#myModal2" aria-haspopup="true" aria-expanded="false">$ </button>
+  </span><!-- /btn-group -->
       <input type="text" class="form-control" name="usermsg2" id="usermsg2" placeholder="enter chat">
       <span class="input-group-btn">
         <input class="btn btn-default" name="submitmsg2" id="submitmsg2" type="submit" value="Enter"></input>
@@ -95,7 +121,9 @@
   </form>
     </div><!-- /input-group -->
   </div><!-- /.col-lg-6 -->
+
 </div>
+
 {% else %}
 	<div class="row ">
 		<div class="col-sm-12" >
@@ -109,7 +137,11 @@
 	<div class="row">
 	 <div class="col-sm-12">
   	<form name="message2" id="broadcast3" action="#" method='POST'>
-    <div class="input-group">
+          <div class="input-group">
+    <span class="input-group-btn">
+  <button type="button" class="btn btn-default" data-toggle="modal" data-target="#myModal" aria-haspopup="true" aria-expanded="false">$ </button>
+  </span><!-- /btn-group -->
+
       <input type="text" class="form-control" name="usermsg3" id="usermsg3" placeholder="Enter chat">
       <span class="input-group-btn">
         <input class="btn btn-default" name="submitmsg3" id="submitmsg3" type="submit" value="Enter"></input>
