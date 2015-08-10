@@ -151,6 +151,8 @@ def transfer_money(msg):
         try:
             print session['role'],'to',msg['toRole'] 
             print 'money: ',msg['data']
+        except:
+            print 'not able to get money data'
     try:
         #current bank of the judge
         judge_current= db.session.query(Bank).filter_by(role='judge')
