@@ -57,6 +57,42 @@ $(document).ready(function(){
         }
     });
 
+    socket.on('money_message',function(msg){
+        console.log('in money_message');
+        if(currentRole==msg.fromRole || currentRole==msg.toRole){
+            $('#log').append('<br>'+ msg.time+' ' + msg.fromRole+' sent ' +msg.toRole + ' $'+msg.money);
+            var affix = $('a#bankmoney').text().split(' ')[0]
+            var currency = $('a#bankmoney').text().split(' ')[1]
+            var number = Number(currency.replace(/[^0-9\.]+/g,""));
+        if (currentRole == msg.fromRole){
+            console.log(currency)
+            console.log(number)
+            console.log(affix)
+            console.log(msg.money)
+            number-=Number(msg.money);
+            $('a#bankmoney').text(affix+' '+number)
+
+        }
+        else{
+                        number+=Number(msg.money);
+            $('a#bankmoney').text(affix+' '+number)
+
+        }
+        }
+    });
+    socket.on('err_message',function(msg){
+        console.log('in err_message');
+        if(currentRole == msg.fromRole){
+            if (toRole == 'tester1'){
+                $('#log').append(msg.data);
+            }
+            else{
+                $('#log2').append(msg.data);
+            }
+            
+        }
+    });
+
     if($("#myModal").length!=0){
         console.log("found mymodal")
         $('form#moneymodal1').submit(function(event){

@@ -25,7 +25,6 @@ def get_or_create(session, model, defaults=None, **kwargs):
 
 @app.route('/message')
 def message():
-
     from app import db,models
     messages = [message.toDict() for message in db.session.query(models.Message).all()]
     return json.dumps(messages)
@@ -54,9 +53,9 @@ def reset_money():
     for b in db.session.query(models.Bank).all():
         b.money = startMoney
         print 'process',b
-    session.commit()
+    db.session.commit()
     print 'reset finished. '
-    return redirect(url_for('chat'))    
+    return redirect(url_for('bank'))    
 
 
 
@@ -183,7 +182,7 @@ def transfer_money(msg):
     fromBank, status = get_or_create(db.session,models.Bank,role=fromRole,username=session['username'])
     toBank, status = get_or_create(db.session,models.Bank,role=toRole,username=session['username'])
     if fromBank.money<money:
-        emit('err_message',{'data':'$'+msg['data']+ ' has not been sent to '+msg['toRole']+' :NOT ENOUGH MONEY IN BANK','role':msg['fromRole'],'time':str(datetime.now())[10:19],'toRole':msg['toRole']},callback=ack,broadcast=True)
+        emit('err_message',{'money':'$'+msg['data']+ ' has not been sent to '+msg['toRole']+' :NOT ENOUGH MONEY IN BANK','fromRole':msg['fromRole'],'time':str(datetime.now())[10:19],'toRole':msg['toRole']},callback=ack,broadcast=True)
         return
     tempTrans = models.Trans(fromRole,toRole,money)
     db.session.add(tempTrans)
@@ -197,25 +196,7 @@ def transfer_money(msg):
     #gertting user's bank. 
     userBank, status = get_or_create(db.session,models.Bank,role=session['role'],username=session['username'])
     session['money'] = userBank.money
-    emit('new_message',{'data':'$'+msg['data']+ ' sent to '+msg['toRole'],'role':msg['fromRole'],'time':str(datetime.now())[10:19],'toRole':msg['toRole']},callback=ack,broadcast=True)
-
-    judge_current= db.session.query(models.Bank).filter_by(role='judge')
-    print '*'*80
-    print 'in transfer_money'
- 
-    try:
-        #current bank of the judge
-        judge_current= db.session.query(models.Bank).filter_by(role='judge')
-        print judge_current
-
-        if session['role'] !='judge':
-
-            #Trans row
-            trans = models.Trans(fromRole, toRole, amount)
-
-        pass
-    except Exception,err:
-        print err
+    emit('money_message',{'money':msg['data'],'fromRole':msg['fromRole'],'time':str(datetime.now())[10:19],'toRole':msg['toRole']},callback=ack,broadcast=True)
 
 
 
