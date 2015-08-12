@@ -15,6 +15,8 @@ class Message(db.Model):
         self.time = time
     def __repr__(self):
         return '<Message %r, from %r, to %r>' % (self.message,self.fromRole,self.toRole)
+    def toDict(self):
+        return {'fromRole':self.fromRole,'toRole':self.toRole,'message':self.message,'time':str(self.time)}
 
 class User(db.Model):
     id = db.Column(db.Integer, primary_key=True)
@@ -25,6 +27,8 @@ class User(db.Model):
         self.password = password
     def __repr__(self):
         return '<User %r>' % self.username
+    def toDict(self):
+        return {'username':self.username,'password':self.password}
 
 class Bank(db.Model):
     startMoney = 200
@@ -42,6 +46,8 @@ class Bank(db.Model):
         self.money = money
     def __repr__(self):
         return '<role %r User %r Bank %r>' %(self.role,self.username,self.money)
+    def toDict(self):
+        return {'role':self.role,'username':self.username,'money':self.money}
 
 class Trans(db.Model):
     id = db.Column(db.Integer, primary_key=True)
@@ -58,3 +64,5 @@ class Trans(db.Model):
         self.amount = amount
     def __repr__(self):
         return '<$%r from %r to %r >'%(self.amount,self.fromRole,self.toRole)
+    def toDict(self):
+        return {'fromRole':self.fromRole,'toRole':self.toRole,'amount':self.amount,'time':str(self.time)}

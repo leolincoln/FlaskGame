@@ -5,6 +5,7 @@ from flask.ext.sqlalchemy import SQLAlchemy
 from datetime import datetime
 from app import app, socketio
 import random
+import json
 
 #mimic the function in django on get_or_create. 
 #input session, model and kwargs. 
@@ -21,6 +22,27 @@ def get_or_create(session, model, defaults=None, **kwargs):
         session.commit()
         print 'did not found instance, created new object',instance
         return instance, True
+
+@app.route('/message')
+def message():
+
+    from app import db,models
+    messages = [message.toDict() for message in db.session.query(models.Message).all()]
+    return json.dumps(messages)
+   # return 'this is place holder for all messages'
+@app.route('/trans')
+def trans():
+
+    from app import db,models
+    messages = [message.toDict() for message in db.session.query(models.Trans).all()]
+    return json.dumps(messages)
+
+@app.route('/bank')
+def bank():
+
+    from app import db,models
+    messages = [message.toDict() for message in db.session.query(models.Bank).all()]
+    return json.dumps(messages)
 
 #reset the money for all players
 @app.route('/reset')
