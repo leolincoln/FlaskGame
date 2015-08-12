@@ -11,6 +11,7 @@ import random
 def get_or_create(session, model, defaults=None, **kwargs):
     instance = session.query(model).filter_by(**kwargs).first()
     if instance:
+        print 'found instance.', instance
         return instance, False
     else:
         params = dict((k, v) for k, v in kwargs.iteritems())
@@ -18,6 +19,7 @@ def get_or_create(session, model, defaults=None, **kwargs):
         instance = model(**params)
         session.add(instance)
         session.commit()
+        print 'did not found instance, created new object',instance
         return instance, True
 
 #reset the money for all players
@@ -68,9 +70,9 @@ def chat():
     print '*'*80
     print 'in chat def, generating the initial banks. '
     userBank, status = get_or_create(db.session,models.Bank,role=session['role'],username=session['username'])
-    print userBank
-    return render_template('chat.html',money = userBank.money)
-
+   # print userBank
+    #return render_template('chat.html',money = userBank.money)
+    return render_template('chat.html',money=userBank.money)
 #this is for generating the false csv list of results. 
 def get_rand_no_duplicate(sList,number=10):
     print '*'*80
@@ -155,7 +157,7 @@ def transfer_money(msg):
             print 'not able to get money data'
     try:
         #current bank of the judge
-        judge_current= db.session.query(Bank).filter_by(role='judge')
+        judge_current= db.session.query(models.Bank).filter_by(role='judge')
         print judge_current
 
         if session['role'] !='judge':
@@ -168,7 +170,7 @@ def transfer_money(msg):
 
 
 
-@socketio.on('winnter_message')
+@socketio.on('winner_message')
 @login_required
 def winnter(msg):
     #if a winner is declared, return each player and judge to result page. 

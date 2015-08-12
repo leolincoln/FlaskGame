@@ -51,25 +51,35 @@ $(document).ready(function(){
         }
         //clean up messages
         $('input#usermsg2').val('')
+        $('input#usermsg3').val('')
         if(currentUser=='judge'){
             $('input#usermsg').val('')
         }
     });
 
-    if($("$mymodal").length!=0){
-        $('form#mymodal').submit(function(event){
+    if($("#myModal").length!=0){
+        console.log("found mymodal")
+        $('form#moneymodal1').submit(function(event){
             socket.emit('money_message',{data: $('#money').val(),toRole: 'tester1'});
+            console.log('binding complete for form#mymodal')
+            return false;
         });
     };
-    if($("$mymodal2").length!=0){
-        $('form#mymodal2').submit(function(event){
+    if($("#myModal2").length!=0){
+        console.log("found mymodal2")
+        $('form#moneymodal2').submit(function(event){
+
             socket.emit('money_message',{data: $('#money2').val(),toRole: 'tester2'});
+            console.log('binding complete for form#mymodal2')
+
+            return false;
         });
     };
 
     if($("#broadcast").length != 0){
         $('form#broadcast').submit(function(event) {
             socket.emit('usr_message', {data: $('#usermsg').val(),toRole: 'tester1'});
+            console.log('binding complete for broadcast1 submit button')
             return false;
         });
     };
