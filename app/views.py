@@ -129,7 +129,7 @@ def ack():
 
 @socketio.on('connect')
 def test_connect():
-    emit('new_message', {'data': 'Connected', 'count': 0})
+    emit('new_message', {'data': 'Connected'})
     print 'connected'
 
 
@@ -147,20 +147,47 @@ def connected(msg):
 @socketio.on('money_message')
 def transfer_money(msg):
     from app import db,models
+    print 'msg in money_message',msg
+    #with our initial money model judge, tester1, tester2 should all have intial money already. 
+    #now what we need to think about is how to check if the user input money is higher than actually whatthey have. 
+
+    #now if its on the judge side, then we will need ot update our money banks
+    #and we will need to show the message as new message 
+    
+    fromRole = msg['fromRole']
+    toRole = msg['toRole']
+    money = float(msg['data'])
+    print fromRole,'to',msg['toRole'],float(msg['data'])
+    fromBank, status = get_or_create(db.session,models.Bank,role=fromRole,username=session['username'])
+    toBank, status = get_or_create(db.session,models.Bank,role=toRole,username=session['username'])
+    if fromBank.money<money:
+        emit('err_message',{'data':'$'+msg['data']+ ' has not been sent to '+msg['toRole']+' :NOT ENOUGH MONEY IN BANK','role':msg['fromRole'],'time':str(datetime.now())[10:19],'toRole':msg['toRole']},callback=ack,broadcast=True)
+        return
+    tempTrans = models.Trans(fromRole,toRole,money)
+    db.session.add(tempTrans)
+    #now logic: if the money doe not exceeds frombank, then do operation. Otherwise dont do anything.
+    fromBank.money-=money
+    toBank.money+=money
+    db.session.commit()
+
+    #then if you are the other people, we will need to update the money count 
+    #and we will show the message as new message. 
+    #gertting user's bank. 
+    userBank, status = get_or_create(db.session,models.Bank,role=session['role'],username=session['username'])
+    session['money'] = userBank.money
+    emit('new_message',{'data':'$'+msg['data']+ ' sent to '+msg['toRole'],'role':msg['fromRole'],'time':str(datetime.now())[10:19],'toRole':msg['toRole']},callback=ack,broadcast=True)
+
+    judge_current= db.session.query(models.Bank).filter_by(role='judge')
     print '*'*80
     print 'in transfer_money'
-    if session['role']=='judge':
-        try:
-            print session['role'],'to',msg['toRole'] 
-            print 'money: ',msg['data']
-        except:
-            print 'not able to get money data'
+ 
     try:
         #current bank of the judge
         judge_current= db.session.query(models.Bank).filter_by(role='judge')
         print judge_current
 
         if session['role'] !='judge':
+
             #Trans row
             trans = models.Trans(fromRole, toRole, amount)
 
@@ -198,9 +225,7 @@ def send_message(msg):
         return redirect(url_for('login'))
     db.session.add(tempM)
     db.session.commit()
-
-    session['receive_count'] = session.get('receive_count', 0) + 1
-    emit('new_message',{'data':msg['data'],'count':session['receive_count'],'role':session['role'],'time':str(datetime.now())[10:19],'toRole':msg['toRole']},callback=ack,broadcast=True)
+    emit('new_message',{'data':msg['data'],'role':session['role'],'time':str(datetime.now())[10:19],'toRole':msg['toRole']},callback=ack,broadcast=True)
 
 
 if __name__=='__main__':

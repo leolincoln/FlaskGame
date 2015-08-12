@@ -49,7 +49,7 @@ class Trans(db.Model):
     fromRole = db.Column(db.String(80))
     toRole = db.Column(db.String(80))
     amount = db.Column(db.Float)
-    def __init__(self,fromRole,toRole,amount,time):
+    def __init__(self,fromRole,toRole,amount,time=None):
         if time is None:
             time=datetime.utcnow()
         self.time = time
