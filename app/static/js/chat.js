@@ -87,6 +87,8 @@ $(document).ready(function(){
     });
     socket.on('err_message',function(msg){
         console.log('in err_message');
+        console.log('from: '+msg.fromRole)
+        console.log('to: '+msg.toRole)
         if(currentRole == msg.fromRole){
             if (msg.toRole == 'tester1'){
                 $('#log').append(msg.data);
