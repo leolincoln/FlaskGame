@@ -92,21 +92,40 @@ $(document).ready(function(){
             
         }
     });
-
+    if(currentRole != 'judge'){
+            var toRole = 'judge'
+    }
+    else{
+            var toRole = null
+    }
     if($("#myModal").length!=0){
+
         console.log("found mymodal")
+
         $('form#moneymodal1').submit(function(event){
+            if(toRole == null){
             socket.emit('money_message',{data: $('#money').val(),toRole: 'tester1',fromRole: currentRole});
+        }
+        else{
+            socket.emit('money_message',{data: $('#money').val(),toRole: toRole,fromRole: currentRole});
+        }
             $('#myModal').modal('hide');
             $('money1').val(0)
             console.log('binding complete for form#mymodal')
             return false;
         });
+    
     };
     if($("#myModal2").length!=0){
         console.log("found mymodal2")
         $('form#moneymodal2').submit(function(event){
+            if(toRole == null){
             socket.emit('money_message',{data: $('#money2').val(),toRole: 'tester2',fromRole: currentRole});
+        }
+        else{
+            socket.emit('money_message',{data: $('#money2').val(),toRole: toRole,fromRole: currentRole});
+
+        }
             $('#myModal2').modal('hide');
             $('money2').val(0)
             console.log('binding complete for form#mymodal2')

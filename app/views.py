@@ -73,7 +73,7 @@ def login_required(f):
 
 @app.route('/')
 def home():
-    return render_template('login.html')
+    return redirect(url_for('login'))
 
 @app.route('/welcome')
 def welcome():
@@ -90,7 +90,7 @@ def chat():
     from app import db,models
     print '*'*80
     print 'in chat def, generating the initial banks. '
-    userBank, status = get_or_create(db.session,models.Bank,role=session['role'],username=session['username'])
+    userBank, status = get_rand_no_duplicater_create(db.session,models.Bank,role=session['role'],username=session['username'])
    # print userBank
     #return render_template('chat.html',money = userBank.money)
     return render_template('chat.html',money=userBank.money)
@@ -114,6 +114,12 @@ def get_rand_no_duplicate(sList,number=10):
 def login():
     
     error = None
+    if session.get('logged_in') == True:
+        #if already logged in:
+        if session['role'] == 'judge':
+            return redirect(url_for('chat'))
+        else:
+            return redirect(url_for('colors'))
     if request.method == 'POST':
         if request.form['username']!='admin' or request.form['password']!='admin':
             error = 'Invalid credentials'
