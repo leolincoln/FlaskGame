@@ -87,17 +87,15 @@ $(document).ready(function(){
     });
     socket.on('err_message',function(msg){
         console.log('in err_message');
-        console.log('from: '+msg.fromRole)
-        console.log('to: '+msg.toRole)
         if(currentRole == msg.fromRole){
             if (msg.toRole == 'tester1'){
-                $('#log').append(msg.data);
+                $('#log').append('<br>'+msg.time+' '+msg.money);
             }
             else if(msg.toRole == 'tester2'){
-                $('#log2').append(msg.data);
+                $('#log2').append('<br>'+msg.time+' '+msg.money);
             }
             else{
-                $('#log').append(msg.data);
+                $('#log').append('<br>'+msg.time+' '+msg.money);
             }
         }
     });
