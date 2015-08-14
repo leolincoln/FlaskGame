@@ -60,7 +60,12 @@ $(document).ready(function(){
     socket.on('money_message',function(msg){
         console.log('in money_message');
         if(currentRole==msg.fromRole || currentRole==msg.toRole){
-            $('#log').append('<br>'+ msg.time+' ' + msg.fromRole+' sent ' +msg.toRole + ' $'+msg.money);
+            if(currentRole == 'judge' && toRole == 'tester2'){
+                $('#log2').append('<br>'+ msg.time+' ' + msg.fromRole+' sent ' +msg.toRole + ' $'+msg.money);
+            }
+            else{
+                $('#log').append('<br>'+ msg.time+' ' + msg.fromRole+' sent ' +msg.toRole + ' $'+msg.money);
+            }
             var affix = $('a#bankmoney').text().split(' ')[0]
             var currency = $('a#bankmoney').text().split(' ')[1]
             var number = Number(currency.replace(/[^0-9\.]+/g,""));
@@ -86,10 +91,12 @@ $(document).ready(function(){
             if (toRole == 'tester1'){
                 $('#log').append(msg.data);
             }
-            else{
+            else if(toRole == 'tester2'){
                 $('#log2').append(msg.data);
             }
-            
+            else{
+                $('#log').append(msg.data);
+            }
         }
     });
     if(currentRole != 'judge'){
