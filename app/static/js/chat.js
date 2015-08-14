@@ -88,10 +88,10 @@ $(document).ready(function(){
     socket.on('err_message',function(msg){
         console.log('in err_message');
         if(currentRole == msg.fromRole){
-            if (toRole == 'tester1'){
+            if (msg.toRole == 'tester1'){
                 $('#log').append(msg.data);
             }
-            else if(toRole == 'tester2'){
+            else if(msg.toRole == 'tester2'){
                 $('#log2').append(msg.data);
             }
             else{
