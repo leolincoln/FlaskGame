@@ -90,7 +90,7 @@ def chat():
     from app import db,models
     print '*'*80
     print 'in chat def, generating the initial banks. '
-    userBank, status = get_rand_no_duplicate_create(db.session,models.Bank,role=session['role'],username=session['username'])
+    userBank, status = get_or_create(db.session,models.Bank,role=session['role'],username=session['username'])
    # print userBank
     #return render_template('chat.html',money = userBank.money)
     return render_template('chat.html',money=userBank.money)
