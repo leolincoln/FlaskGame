@@ -2,6 +2,9 @@
 {% block title %}
 <title> Game - chat page</title>
 {% endblock %}
+{% block css %}
+ <link href="/static/css/chat.css" rel="stylesheet">
+{% endblock %}
 {% block js %}
 
 <script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/socket.io/0.9.16/socket.io.min.js"></script>
@@ -55,6 +58,14 @@
   </div>
   </div>
   {% endif %}
+  <div class-"row">
+    <div class="col-sm-3 col-sm-offset-2">
+      <button type="button" class="btn btn-primary btn-lg outline">WINNER</button>
+    </div>
+    <div class="col-sm-3 col-sm-offset-3">
+      <button type="button" class="btn btn-primary btn-lg outline">WINNER</button>
+    </div>
+  </div>
 	<div class="row ">
 		<div class="col-sm-6" >
 			<div class="panel panel-default">
@@ -105,8 +116,8 @@
         <input class="btn btn-default" name="submitmsg" id="submitmsg" type="submit" value="Enter"></input>
       </span>
   </form>
-    </div><!-- /input-group -->
-  </div><!-- /.col-lg-6 -->
+    </div><!-- /col-sm-6 -->
+  </div><!-- /.row -->
 
 <div class="row">
   <div class="col-sm-6">
