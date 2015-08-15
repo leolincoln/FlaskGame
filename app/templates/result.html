@@ -1,0 +1,14 @@
+<!-- extend base layout -->
+{% extends "template.html" %}
+{% block title %}
+<title> Game - result page</title>
+{% endblock %}
+{% block js %}
+<script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/socket.io/0.9.16/socket.io.min.js"></script>
+<script type="text/javascript" src="/static/js/chat.js"></script>
+{% endblock %}
+
+{% block content %}
+<h3><span class="label label-success"> Judge is making its decision</span><span class="label label-info">judge is a monster</span></h3>
+<h3><span class="label label-warning"> you can play around for a bit</span></h3>
+{% endblock %}

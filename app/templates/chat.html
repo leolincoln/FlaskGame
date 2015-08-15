@@ -8,7 +8,7 @@
 {% block js %}
 
 <script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/socket.io/0.9.16/socket.io.min.js"></script>
-<script src="/static/js/papaparse.min.js"></script>
+
 <script type="text/javascript" src="/static/js/chat.js"></script>
 
 
@@ -60,29 +60,64 @@
   {% endif %}
   <div class-"row">
     <div class="col-sm-3 col-sm-offset-2">
-      <button type="button" class="btn btn-primary btn-lg outline">WINNER</button>
+      <button type="button" class="btn btn-primary btn-lg " data-toggle="modal" data-target="#winner_tester1_modal" aria-haspopup="true" aria-expanded="false" >WINNER</button>
     </div>
     <div class="col-sm-3 col-sm-offset-3">
-      <button type="button" class="btn btn-primary btn-lg outline">WINNER</button>
+      <button type="button" class="btn btn-primary btn-lg" data-toggle="modal" data-target="#winner_tester2_modal" aria-haspopup="true" aria-expanded="false">WINNER</button>
     </div>
   </div>
 	<div class="row ">
 		<div class="col-sm-6" >
 			<div class="panel panel-default">
-				 <div class="panel-heading">Chat for tester1:</div>
+				 <div class="panel-heading">
+          tester1 status: <span class="label label-default" id=tester1_status>Not Ready</span></div>
 				<div class="panel-body" id="log">
   				</div>
 			</div>
 		</div>
 		<div class="col-sm-6" >
 			<div class="panel panel-default">
-				 <div class="panel-heading">Chat for tester2:</div>
+				 <div class="panel-heading">
+          tester2 status: <span class="label label-default" id=tester2_status>Not Ready</span></div>
 				 <div class="panel-body" id="log2">
   				 </div>
 			</div>
 		</div>
 	</div>
-
+<div class="modal fade" id="winner_tester1_modal" tabindex="-1" role="dialog" aria-labelledby="user1_winLabel">
+    <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+        <h4 class="modal-title">Winner Dialog</h4>
+      </div>
+      <div class="modal-body">
+        Confirm you are going to make tester1 win this round!
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+        <button type="button" id="winner_tester1_button" class="btn btn-primary" >Confirm</button>
+      </div>
+    </div><!-- /.modal-content -->
+  </div><!-- /.modal-dialog -->
+</div><!-- /.modal -->
+<div class="modal fade" id="winner_tester2_modal" tabindex="-1" role="dialog" aria-labelledby="user1_winLabel">
+    <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+        <h4 class="modal-title">Winner Dialog</h4>
+      </div>
+      <div class="modal-body">
+        Confirm you are going to make tester2 win this round!
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+        <button type="button" id="winner_tester2_button" class="btn btn-primary">Confirm</button>
+      </div>
+    </div><!-- /.modal-content -->
+  </div><!-- /.modal-dialog -->
+</div><!-- /.modal -->
 
 <div class="modal fade" id="myModal2" tabindex="-1" role="dialog" aria-labelledby="myModal2Label">
     <div class="modal-dialog">
@@ -160,7 +195,12 @@
       </span>
   </form>
     </div><!-- /input-group -->
-  </div><!-- /.col-lg-6 -->
+  </div><!-- /.col-lg-12 -->
+</div>
+<div row>
+ <div class="col-sm-3 col-sm-offset-9">
+      <button type="button" class="btn btn-primary btn-lg " id="continue_button">I am done with Talking >></button>
+    </div>
 </div>
 {% endif %}
 

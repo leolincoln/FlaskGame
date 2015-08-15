@@ -83,6 +83,10 @@ def welcome():
 @login_required
 def colors():
     return render_template('colors.html')
+@app.route('/wait_judge')
+@login_required
+def wait_judge():
+    return render_template('wait_judge.html')
 
 @app.route('/chat')
 @login_required
@@ -109,6 +113,10 @@ def get_rand_no_duplicate(sList,number=10):
             i+=1
     return [sList[i] for i in resultList]
 
+@login_required
+@app.route('/wait_tester')
+def wait_tester():
+    return render_template('wait_tester.html')
 
 @app.route('/login',methods=['GET','POST'])
 def login():
@@ -154,12 +162,6 @@ def ack():
     print 'message was received'
 
 
-@socketio.on('connect')
-def test_connect():
-    emit('new_message', {'data': 'Connected'})
-    print 'connected'
-
-
 #There are only 4 types of messages 
 #tester1 -> judge      t1
 #tester2 -> judge      t2
@@ -169,7 +171,12 @@ def test_connect():
 @socketio.on('connect_message')
 def connected(msg):
     print 'in connnect_message'
-    emit('connect_message',{'data':msg['data'],'role':msg['role'],'time':str(datetime.now())[10:19]})
+    emit('connect_message',{'data':msg['data'],'fromRole':msg['fromRole'],'time':str(datetime.now())[10:19]},broadcast=True)
+@socketio.on('disconnect_message')
+def disconnected(msg):
+    print 'in disconnnect_message'
+    emit('disconnect_message',{'data':msg['data'],'fromRole':msg['fromRole'],'time':str(datetime.now())[10:19]},broadcast=True)
+
 #usr_money is handled here
 @socketio.on('money_message')
 def transfer_money(msg):
@@ -204,21 +211,18 @@ def transfer_money(msg):
     session['money'] = userBank.money
     emit('money_message',{'money':msg['data'],'fromRole':msg['fromRole'],'time':str(datetime.now())[10:19],'toRole':msg['toRole']},callback=ack,broadcast=True)
 
-
-
 @socketio.on('winner_message')
 @login_required
-def winnter(msg):
+def winner(msg):
     #if a winner is declared, return each player and judge to result page. 
-    return redirect(url_for('result',messages = msg))
-
+    emit('new_message',{'data':msg['data'],'role':session['role'],'time':str(datetime.now())[10:19],'toRole':msg['toRole']},callback=ack,broadcast=True)
 
 @app.route('/result')
 @login_required
 def result():
     msg = request.args['messages']
     print 'in result', 'msg is:',msg
-    return msg
+    return render_template('result.html')
 
 
 #usr_message is handle here. 
