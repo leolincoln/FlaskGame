@@ -42,7 +42,14 @@ def color_instruction():
     :return:
     '''
     return render_template('color_instruction.html')
+@app.route('/judge_instruction')
+@login_required
+def judge_instruction():
+    '''
 
+    :return:
+    '''
+    return render_template('judge_instruction.html')
 
 @app.route('/message')
 def message():
@@ -156,7 +163,7 @@ def login():
                     content = f.read()
                 fakeResultList = get_rand_no_duplicate(content.split(',\r'),10)
                 session['results'] = '<br>'.join(fakeResultList)
-                return redirect(url_for('chat'))
+                return redirect(url_for('judge_instruction'))
                 #return render_template('chat.html',results = '<br>'.join(fakeResultList))
             #return render_template('colors.html',session=session )
     return render_template('login.html',error = error)
