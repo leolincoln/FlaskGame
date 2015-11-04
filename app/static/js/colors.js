@@ -5,7 +5,7 @@ $(function() {
 	//Red blue orange yellow green
 		var colors=["rgba(255,0,0,0.5)","rgba(0,0,255,0.5)","rgba(255,165,0,0.7)","rgba(255,255,0,0.7)","rgba(0,128,0,0.5)"];
 		var colors_string = ["Red","Blue","Orange","Yellow","Green"]
-	
+
 		//choose which color to use.
 		var color_num = Math.floor((Math.random() * colors.length));
 
@@ -16,7 +16,6 @@ $(function() {
 		var text_num = Math.floor((Math.random() * colors.length));
 		$(".color").css("color",colors[color_num]).text(colors_string[text_num]);
     	$("body").focus();
-		$("body").focus();
 		$("body").keypress(
 	function(e){
 		console.log( "keypressed" );

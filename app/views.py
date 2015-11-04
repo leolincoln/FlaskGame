@@ -6,6 +6,17 @@ from datetime import datetime
 from app import app, socketio
 import random
 import json
+#login required decorator
+def login_required(f):
+    @wraps(f)
+    def wrap(*args,**kwargs):
+        if 'logged_in' in session:
+            return f(*args,**kwargs)
+        else:
+            flash('you need to login first.')
+            print 'redirecting to login'
+            return redirect(url_for('login'))
+    return wrap
 
 #mimic the function in django on get_or_create. 
 #input session, model and kwargs. 
@@ -22,6 +33,16 @@ def get_or_create(session, model, defaults=None, **kwargs):
         session.commit()
         print 'did not found instance, created new object',instance
         return instance, True
+
+@app.route('/color_instruction')
+@login_required
+def color_instruction():
+    '''
+    Color_instruction page. Render html.
+    :return:
+    '''
+    return render_template('color_instruction.html')
+
 
 @app.route('/message')
 def message():
@@ -59,17 +80,7 @@ def reset_money():
 
 
 
-#login required decorator
-def login_required(f):
-    @wraps(f)
-    def wrap(*args,**kwargs):
-        if 'logged_in' in session:
-            return f(*args,**kwargs)
-        else:
-            flash('you need to login first.')
-            print 'redirecting to login'
-            return redirect(url_for('login'))
-    return wrap
+
 
 @app.route('/')
 def home():
@@ -139,7 +150,7 @@ def login():
             flash('you were just logged in!')
 
             if session['role']!='judge':
-                return redirect(url_for('colors'))
+                return redirect(url_for('color_instruction'))
             else:
                 with open('app/results.csv','r') as f:
                     content = f.read()

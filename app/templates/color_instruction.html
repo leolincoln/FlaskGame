@@ -1,27 +1,35 @@
 <!-- extend base layout -->
 {% extends "template.html" %}
 {% block title %}
-<title> Game - login page</title>
+<title> Game - color_instruction page</title>
 {% endblock %}
 
 {% block content %}
 	<div class="row ">
 		<div class="col-sm-12" >
 			<div class="panel panel-default">
-				 <div class="panel-heading">Instructions for pre-login screen</div>
-				<div class="panel-body" id="instruction1">
-                    <h5 style="word-wrap: break-word;">
-                        You are now logged in.
+				 <div class="panel-heading">Instructions for color stroop game</div>
+				<div class="panel-body" id="instruction1" style="font-size:32px;">
+                    <h5>
+                       Hello !It looks like you’ll be competing in our game here today. What you’ll have to do is rather simple, every round will consist of a sequence of 10 responses and whoever responds with the greatest accuracy wins. Upon starting the game a word, the name of a common color, will appear on the screen in a colored font.
                     </h5>
                     <h5>
-                        Today you’ll be either playing or judging a simple game and getting paid to do so!
-  				    </h5>
-                    <h5>
-                        CLick on the login button on the upper right corner and use admin/admin to login.
-  				    </h5>
-
+                        You must identify the color of the font, and respond with the corresponding key press:
+                    </h5>
+                    <table class="table">
+                        <td style="color:red;">A='Red' </td>
+                        <td style="color:blue">S='Blue'</td>
+                        <td style="color:orange">D='Orange'</td>
+                        <td style="color:yellow">F='Yellow'</td>
+                        <td style="color:green">G='Green'</td>
+                    </table>
+                    <h5>For each round of our game you will do this a total of 10 times, at which point your results will be compared with another participant and you will either win or lose and be rewarded accordingly. Be sure to go quickly as you can, because in the case of a tie the judge will likely use response times as the basis of their choice.
+                    </h5>
                 </div>
 			</div>
+            <div class="col-sm-3 col-sm-offset-9">
+      <button type="button" class="btn btn-primary btn-lg " id="continue_button" onclick="location.href = '/colors'">Continue >></button>
+    </div>
 		</div>
 	</div>
 {% endblock %}
