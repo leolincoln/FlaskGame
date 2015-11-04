@@ -3,7 +3,14 @@
 {% block title %}
 <title> Game - color_instruction page</title>
 {% endblock %}
+{% block js %}
+    <script type="application/javascript">
+    $(document).ready(function() {
+      $('#continue_button').hide().delay(3000).fadeIn(2200);
+});
 
+    </script>
+{%  endblock %}
 {% block content %}
 	<div class="row ">
 		<div class="col-sm-12" >
@@ -17,6 +24,9 @@
                         It looks like you’ll be judging our game here today. What you’ll have to do is rather simple, each round the players will be compete in providing a series of 10 responses. They are shown a word which is both the name of a color and written in a colored font, their goal is to correctly identify the font color. You’ll be given a score sheets like the one at right. The winner should be whoever had the most correct responses, if there’s a tie you may select the winner based faster reaction times.
                     </h5>
 
+                    <h5>
+                        Please wait for a few seconds as the continue button wont appear untill after players finish playing stroop game
+                    </h5>
                 </div>
 			</div>
             <div class="col-sm-3 col-sm-offset-9">

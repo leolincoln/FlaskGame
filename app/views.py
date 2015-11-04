@@ -145,7 +145,7 @@ def chat():
         with open('app/results.csv','r') as f:
             content = f.read()
         fakeResultList = get_rand_no_duplicate(content.split(',\r'),10)
-        return render_template('chat.html',results = table_builder(['Color','p1_color','p1_time','p2_color','p2_time'],fakeResultList),money=userBank.money)
+        return render_template('chat.html',results = table_builder(['Color','p1_color','p2_color','p1_time','p2_time'],fakeResultList),money=userBank.money)
     else:
         return render_template('chat.html',money=userBank.money)
 #this is for generating the false csv list of results. 
@@ -269,7 +269,7 @@ def transfer_money(msg):
 @login_required
 def winner(msg):
     #if a winner is declared, return each player and judge to result page. 
-    emit('new_message',{'data':msg['data'],'role':session['role'],'time':str(datetime.now())[10:19],'toRole':msg['toRole']},callback=ack,broadcast=True)
+    emit('new_message',{'data':'Winner is:'+msg['toRole'],'role':session['role'],'time':str(datetime.now())[10:19],'toRole':msg['toRole']},callback=ack,broadcast=True)
 
 @app.route('/result')
 @login_required
@@ -277,7 +277,6 @@ def result():
     msg = request.args['messages']
     print 'in result', 'msg is:',msg
     return render_template('result.html')
-
 
 #usr_message is handle here. 
 @socketio.on('usr_message')

@@ -38,7 +38,7 @@ class Bank(db.Model):
     money = db.Column(db.Float)
     def __init__(self,role,money=None,username=None):
         if username is None:
-            username = admin
+            username = "admin"
         self.username = username
         self.role = role
         if money is None:
