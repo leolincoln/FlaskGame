@@ -44,14 +44,14 @@
   </div><!-- /.modal-dialog -->
 </div><!-- /.modal -->
 {% if session.role == 'judge' %}
-{% if session.results %}
+{% if results %}
 <div class="row">
   <div class="col-lg-9">
     <div class="panel panel-default">
       <div class="panel-heading"> results for tester1 and tester2 </div>
       <div class="panel-body">
         {% autoescape false %}
-        {{ session.results }}
+        {{ results }}
         {% endautoescape %}
       </div>
     </div>

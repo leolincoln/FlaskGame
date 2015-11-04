@@ -33,6 +33,34 @@ def get_or_create(session, model, defaults=None, **kwargs):
         session.commit()
         print 'did not found instance, created new object',instance
         return instance, True
+#helps build a table
+def table_builder(header=None,rows =None):
+    '''
+
+    :param header: list of strings matching column number
+    :param rows:list of row. each row has its own list.
+    :return:
+    '''
+    #start building a twitter bootstrap style table.
+    result = ''
+    result += '<table class="table table-striped">'
+    if header is not None:
+        result += '<thead>'
+        result += '<tr>'
+        for head in header:
+            result+='<th>' + head + '</th>'
+        result+='</tr>'
+        result+='</thead>'
+    result+='<tbody>'
+    for row in rows:
+        result +='<tr>'
+        for item in row:
+            result+= '<td>'+item+'</td>'
+        result+='</tr>'
+    result+='</tbody>'
+    result+='</table>'
+    return result
+
 
 @app.route('/color_instruction')
 @login_required
@@ -113,11 +141,24 @@ def chat():
     print '*'*80
     print 'in chat def, generating the initial banks. '
     userBank, status = get_or_create(db.session,models.Bank,role=session['role'],username=session['username'])
-   # print userBank
-    #return render_template('chat.html',money = userBank.money)
-    return render_template('chat.html',money=userBank.money)
+    if session['role']=='judge':
+        with open('app/results.csv','r') as f:
+            content = f.read()
+        fakeResultList = get_rand_no_duplicate(content.split(',\r'),10)
+        return render_template('chat.html',results = table_builder(['Color','p1_color','p1_time','p2_color','p2_time'],fakeResultList),money=userBank.money)
+    else:
+        return render_template('chat.html',money=userBank.money)
 #this is for generating the false csv list of results. 
-def get_rand_no_duplicate(sList,number=10):
+def get_rand_no_duplicate(sList,number=10,deli = None):
+    '''
+    read elements in sList
+    :param sList: list of strings deliminated by deli specified.
+    :param number:Integer How many no_duplicate random records
+    :param deli:String The deliminator for string list slist
+    :return:
+    '''
+    if deli is None:
+        deli = ','
     print '*'*80
     print 'in get_rand_no_duplicate'
     print len(sList)
@@ -129,7 +170,8 @@ def get_rand_no_duplicate(sList,number=10):
         if iTemp not in resultList:
             resultList.append(iTemp)
             i+=1
-    return [sList[i] for i in resultList]
+    #this reutrn assumes the deliminator is ','
+    return [sList[i].split(deli) for i in resultList]
 
 @login_required
 @app.route('/wait_tester')
@@ -159,13 +201,7 @@ def login():
             if session['role']!='judge':
                 return redirect(url_for('color_instruction'))
             else:
-                with open('app/results.csv','r') as f:
-                    content = f.read()
-                fakeResultList = get_rand_no_duplicate(content.split(',\r'),10)
-                session['results'] = '<br>'.join(fakeResultList)
                 return redirect(url_for('judge_instruction'))
-                #return render_template('chat.html',results = '<br>'.join(fakeResultList))
-            #return render_template('colors.html',session=session )
     return render_template('login.html',error = error)
 
 @app.route('/logout')
