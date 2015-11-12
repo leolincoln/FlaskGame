@@ -1,22 +1,29 @@
 $(document).ready(function(){
+
+    function redirectJudge(){
+      $(location).attr('href','./judge_instruction')
+    }
+    function redirectTester(){
+      $(location).attr('href','./color_instruction')
+    }
     var currentRole = $('#welcomemessage')[0].textContent.split(' ')[3]
     console.log(currentRole)
     var socket = io.connect('http://' + document.domain + ':' + location.port);
-    
+
     socket.on('connect', function() {
             console.log('in socket connect')
             socket.emit('connect_message', {data: 'I\'m connected!','fromRole': currentRole});
     });
-    
+
     socket.on('disconnect', function () {
         console.log('disconnect client event....');
         socket.emit('disconnect_message', {data: 'I\'m disconnected!','fromRole': currentRole});
     });
-    
+
     socket.on('connect_message',function(msg){
-        //the logic is 
+        //the logic is
         //if both testers logged in,
-        //then judge should log in too. 
+        //then judge should log in too.
         //document.location.href = '/chat'
         console.log("in connect_message: toRole="+currentRole+'fromRole='+msg.fromRole)
         if($('#'+msg.fromRole+'_status').length!=0){
@@ -32,9 +39,9 @@ $(document).ready(function(){
     });
 
     socket.on('disconnect_message',function(msg){
-      //the logic is 
+      //the logic is
       //if both testers logged in,
-      //then judge should log in too. 
+      //then judge should log in too.
         //document.location.href = '/chat'
         console.log("in disconnect_message: toRole="+currentRole+'fromRole='+msg.fromRole)
         if($('#'+msg.fromRole+'_status').length!=0){
@@ -50,6 +57,10 @@ $(document).ready(function(){
     });
 
     socket.on('new_message', function(msg) {
+      //if win message, redirect tester to color instruction page after 3000 ms
+        if(msg.win){
+          setTimeout(redirectTester, 3000)
+        }
         if(msg.role == 'judge' && msg.toRole == 'tester1'){
             if(currentRole=='judge'){
                 $('#log').append('<br>'+ msg.time+' ' + msg.role+' : ' + msg.data);
@@ -89,9 +100,11 @@ $(document).ready(function(){
             $('input#usermsg').val('')
         }
     });
-    socket.on('winner_message',function(msg){
+    socket.on('win_message',function(msg){
+      console.log('in win message');
         if(currentRole!='judge'){
             console.log(msg.toRole+' is Winner!');
+            $(location).attr('href','./color_instruction').delay(3000)
         }
     })
     socket.on('money_message',function(msg){
@@ -158,7 +171,7 @@ $(document).ready(function(){
             console.log('binding complete for form#mymodal')
             return false;
         });
-    
+
     };
     if($("#myModal2").length!=0){
         console.log("found mymodal2")
@@ -209,6 +222,7 @@ $(document).ready(function(){
         $('#winner_tester1_button').click(function(){
             socket.emit('winner_message', {fromRole: currentRole,toRole:'tester1'});
             $('#winner_tester1_modal').modal('hide');
+            setTimeout(redirectJudge, 3000)
             return false ;
         });
     }
@@ -216,6 +230,7 @@ $(document).ready(function(){
         $('#winner_tester2_button').click(function(){
             socket.emit('winner_message', {fromRole: currentRole,toRole:'tester2'});
             $('#winner_tester2_modal').modal('hide');
+            setTimeout(redirectJudge, 3000)
             return false;
         });
     }

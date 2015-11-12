@@ -18,8 +18,8 @@ def login_required(f):
             return redirect(url_for('login'))
     return wrap
 
-#mimic the function in django on get_or_create. 
-#input session, model and kwargs. 
+#mimic the function in django on get_or_create.
+#input session, model and kwargs.
 def get_or_create(session, model, defaults=None, **kwargs):
     instance = session.query(model).filter_by(**kwargs).first()
     if instance:
@@ -111,11 +111,7 @@ def reset_money():
         print 'process',b
     db.session.commit()
     print 'reset finished. '
-    return redirect(url_for('bank'))    
-
-
-
-
+    return redirect(url_for('bank'))
 
 @app.route('/')
 def home():
@@ -148,7 +144,7 @@ def chat():
         return render_template('chat.html',results = table_builder(['Color','p1_color','p2_color','p1_time','p2_time'],fakeResultList),money=userBank.money)
     else:
         return render_template('chat.html',money=userBank.money)
-#this is for generating the false csv list of results. 
+#this is for generating the false csv list of results.
 def get_rand_no_duplicate(sList,number=10,deli = None):
     '''
     read elements in sList
@@ -180,7 +176,7 @@ def wait_tester():
 
 @app.route('/login',methods=['GET','POST'])
 def login():
-    
+
     error = None
     if session.get('logged_in') == True:
         #if already logged in:
@@ -206,9 +202,9 @@ def login():
 
 @app.route('/logout')
 def logout():
-    #reset money if judge log out. 
+    #reset money if judge log out.
     session.pop('logged_in',None)
-    session.pop('username',None) 
+    session.pop('username',None)
     session.pop('password',None)
     flash('you were just logged out!')
     return redirect(url_for('login'))
@@ -216,12 +212,12 @@ def ack():
     print 'message was received'
 
 
-#There are only 4 types of messages 
+#There are only 4 types of messages
 #tester1 -> judge      t1
 #tester2 -> judge      t2
 #judge -> tester1      j1
 #judge -> tester2      j2
-#connect message. 
+#connect message.
 @socketio.on('connect_message')
 def connected(msg):
     print 'in connnect_message'
@@ -236,12 +232,12 @@ def disconnected(msg):
 def transfer_money(msg):
     from app import db,models
     print 'msg in money_message',msg
-    #with our initial money model judge, tester1, tester2 should all have intial money already. 
-    #now what we need to think about is how to check if the user input money is higher than actually whatthey have. 
+    #with our initial money model judge, tester1, tester2 should all have intial money already.
+    #now what we need to think about is how to check if the user input money is higher than actually whatthey have.
 
     #now if its on the judge side, then we will need ot update our money banks
-    #and we will need to show the message as new message 
-    
+    #and we will need to show the message as new message
+
     fromRole = msg['fromRole']
     toRole = msg['toRole']
     money = float(msg['data'])
@@ -258,9 +254,9 @@ def transfer_money(msg):
     toBank.money+=money
     db.session.commit()
 
-    #then if you are the other people, we will need to update the money count 
-    #and we will show the message as new message. 
-    #gertting user's bank. 
+    #then if you are the other people, we will need to update the money count
+    #and we will show the message as new message.
+    #gertting user's bank.
     userBank, status = get_or_create(db.session,models.Bank,role=session['role'],username=session['username'])
     session['money'] = userBank.money
     emit('money_message',{'money':msg['data'],'fromRole':msg['fromRole'],'time':str(datetime.now())[10:19],'toRole':msg['toRole']},callback=ack,broadcast=True)
@@ -268,8 +264,23 @@ def transfer_money(msg):
 @socketio.on('winner_message')
 @login_required
 def winner(msg):
-    #if a winner is declared, return each player and judge to result page. 
-    emit('new_message',{'data':'Winner is:'+msg['toRole'],'role':session['role'],'time':str(datetime.now())[10:19],'toRole':msg['toRole']},callback=ack,broadcast=True)
+    #winner money has 2 parts, 1 coming from judge, 1 coming from loser.
+    winner_money = 20
+    #judge money
+    msg_money1= {u'fromRole': u'judge', u'toRole': msg['toRole'], u'data': winner_money/2}
+    #loser money
+    if msg['toRole']=='tester1':
+        msg_money2 = {u'fromRole': u'tester2', u'toRole': msg['toRole'], u'data': winner_money/2}
+    else:
+        msg_money2 = {u'fromRole': u'tester1', u'toRole': msg['toRole'], u'data': winner_money/2}
+    #send the money1 and money2
+    transfer_money(msg_money1)
+    transfer_money(msg_money2)
+
+    #if a winner is declared, return each player and judge to result page.
+    emit('new_message',{'data':'Winner is:'+msg['toRole'],'role':session['role'],'time':str(datetime.now())[10:19],'toRole':'tester1','win':True},callback=ack,broadcast=True)
+    emit('new_message',{'data':'Winner is:'+msg['toRole'],'role':session['role'],'time':str(datetime.now())[10:19],'toRole':'tester2','win':True},callback=ack,broadcast=True)
+
 
 @app.route('/result')
 @login_required
@@ -278,7 +289,7 @@ def result():
     print 'in result', 'msg is:',msg
     return render_template('result.html')
 
-#usr_message is handle here. 
+#usr_message is handle here.
 @socketio.on('usr_message')
 def send_message(msg):
     from app import db,models
